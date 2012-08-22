@@ -11,6 +11,9 @@
 #include <limits.h>
 #include <OpenImageIO/imageio.h>
 #include <deep.h>
+#include <image.h>
+#include <deepimage.h>
+#include <deepio.h>
 
 bool writeImageFile(std::string filename, int xres, int yres, int channels, float * data) {
 	/*
