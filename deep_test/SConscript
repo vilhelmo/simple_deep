@@ -1,0 +1,29 @@
+import glob
+
+# Get all the build variables we need
+Import('env', 'project', 'mymode', 'debugcflags', 'releasecflags')
+localenv = env.Clone()
+
+# Holds the root of the build directory tree
+buildroot = '../' + mymode
+# Holds the build directory for this project
+builddir = buildroot + '/' + project
+# Holds the path to the executable in the build directory
+targetpath = builddir + '/' + project
+
+# Append the user's additional compile flags
+# assume debugcflags and releasecflags are defined
+if mymode == 'debug':
+	localenv.Append(CCFLAGS=debugcflags)
+else:
+	localenv.Append(CCFLAGS=releasecflags)
+
+# Specify the build directory
+localenv.VariantDir(builddir, ".", duplicate=0)
+
+localenv.Append(CPPPATH = ['../deep'])
+localenv.Append(LIBPATH = [buildroot + '/' + 'deep'])
+localenv.Append(LIBS = ['OpenImageIO', 'deep'])
+
+srclst = map(lambda x: builddir + '/' + x, glob.glob('*.cpp'))
+localenv.Program(targetpath, source=srclst)
