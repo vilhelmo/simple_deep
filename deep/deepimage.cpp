@@ -113,7 +113,7 @@ std::vector<DeepDataType> DeepImage::renderPixel(int y, int x) const {
 			int c = 0;
 			// 1st do the alpha channel
 			float alpha = (1.0f - a)*mChannelData.at(ALPHA)[deepValue->second];
-			a += alpha;
+			a = a + alpha;
 			// 2nd do the rest multiplied by the alpha
 			for (auto & channelName : mChannelNamesInOrder) {
 				if (channelName.compare(ALPHA) == 0) {

@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <zlib.h>
 #include "deepio.h"
 #include "deepimage.h"
 

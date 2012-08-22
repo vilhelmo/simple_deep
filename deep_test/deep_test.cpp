@@ -109,10 +109,10 @@ int main() {
 
 	deep::DeepImage * img = new deep::DeepImage(x, y, c);
 
-	drawDeepCircle(5.0f, 400*scale, 300*scale, 100*scale, {1.f, 0.f, 0.f, 0.6f}, img);
+	drawDeepCircle(5.0f, 400*scale, 300*scale, 100*scale, {1.f, 0.f, 0.f, -0.6f}, img);
 	drawDeepCircle(1.0f, 300*scale, 200*scale, 100*scale, {0.f, 1.f, 0.f, 0.6f}, img);
-	drawDeepCircle(3.0f, 275*scale, 300*scale, 100*scale, {0.f, 0.f, 1.f, 0.6f}, img);
-	drawDeepRect(4.0f, 100*scale, 200*scale, 250*scale, 350*scale, {1.f, 1.f, 1.f, 0.6f}, img);
+	drawDeepCircle(3.0f, 275*scale, 300*scale, 100*scale, {0.f, 0.f, 1.f, -0.6f}, img);
+	drawDeepRect(4.0f, 100*scale, 200*scale, 250*scale, 350*scale, {1.f, 1.f, 1.f, -0.6f}, img);
 	drawDeepRect(1.0f, 50*scale, 250*scale, 150*scale, 400*scale, {1.f, 0.f, 1.f, 1.0f}, img);
 
 	deep::Image * flatImg = deep::renderDeepImage(*img);
