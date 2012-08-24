@@ -7,7 +7,8 @@
 
 #include "deepimage.h"
 #include "filter.h"
-
+#include <algorithm>
+#include <iterator>
 
 namespace deep {
 
@@ -108,20 +109,31 @@ std::vector<DeepDataType> DeepImage::renderPixel(int y, int x) const {
 	auto alphaKeyIter = mChannelData.find(ALPHA);
 	if (alphaKeyIter != mChannelData.end()) {
 		// If alpha channel does have an alpha channel, composite the pixel together.
-		float a = 0.0;
+		float accumAlpha = 0.0;
+		float cutoutAlpha = 1.0f;
 		for (auto deepValue = pixelMap.begin(); deepValue != pixelMap.end(); deepValue++) {
 			int c = 0;
-			// 1st do the alpha channel
-			float alpha = (1.0f - a)*mChannelData.at(ALPHA)[deepValue->second];
-			a = a + alpha;
-			// 2nd do the rest multiplied by the alpha
-			for (auto & channelName : mChannelNamesInOrder) {
-				if (channelName.compare(ALPHA) == 0) {
-					values[c] += alpha;
-				} else {
-					values[c] += alpha*mChannelData.at(channelName)[deepValue->second];
+			float sampleAlpha = mChannelData.at(ALPHA)[deepValue->second];
+			if (accumAlpha > cutoutAlpha) {
+				break;
+			} else if (sampleAlpha < 0.f) {
+				// Use + because sampleAlpha is negative to indicate this sample
+				// is cutting out from the image.
+				cutoutAlpha = cutoutAlpha + sampleAlpha;
+			} else {
+				// 1st do the alpha channel
+				float alpha = std::max(cutoutAlpha - accumAlpha, 0.f)*sampleAlpha;
+				// Accumulate the alpha values of the samples
+				accumAlpha = accumAlpha + alpha;
+				// 2nd do the rest multiplied by the alpha
+				for (auto & channelName : mChannelNamesInOrder) {
+					if (channelName.compare(ALPHA) == 0) {
+						values[c] += alpha;
+					} else {
+						values[c] += alpha*mChannelData.at(channelName)[deepValue->second];
+					}
+					c++;
 				}
-				c++;
 			}
 		}
 	} else {
@@ -137,6 +149,41 @@ std::vector<DeepDataType> DeepImage::renderPixel(int y, int x) const {
 	return values;
 }
 
+void DeepImage::addDeepImage(const DeepImage & other) {
+	// Verify the input image has the correct channels.
+	for (auto & channelName : mChannelNamesInOrder) {
+		if (other.mChannelNamesInOrder.end() ==
+				std::find(other.mChannelNamesInOrder.begin(), other.mChannelNamesInOrder.end(), channelName)) {
+			std::cerr << "This deep image has a channel " << channelName << " that doesn't exist in the other image" << std::endl;
+			return;
+		}
+	}
+
+	// Verify that the input image has the correct size.
+	// TODO
+
+
+	// Update the index vectors
+	int originalNumElems = numElements();
+	for (int i = 0; i < mWidth * mHeight; ++i) {
+		std::vector<int> & indexVector = mIndexData[i];
+		const std::vector<int> & otherIndexVector = other.mIndexData[i];
+		indexVector.reserve(indexVector.size() + otherIndexVector.size());
+		for (int otherIndex : otherIndexVector) {
+			indexVector.push_back(originalNumElems + otherIndex - 1);
+		}
+	}
+
+	// Append the channel vectors
+	for (auto & channelData : mChannelData) {
+		std::vector<DeepDataType> & channelVector = channelData.second;
+		const std::vector<DeepDataType> & otherChannelVector = other.mChannelData.at(channelData.first);
+		// First expand the channel to be able to hold all the new data.
+		channelVector.reserve(channelVector.size() + otherChannelVector.size());
+		// Then copy the data from other to this channel.
+		std::copy(otherChannelVector.begin(), otherChannelVector.end(), std::back_inserter(channelVector));
+	}
+}
 
 } // End namespace
 

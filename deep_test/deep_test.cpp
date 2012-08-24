@@ -107,34 +107,42 @@ int main() {
 //	writeImageFile("images/foo.png", x, y, 3, fimg->data(0,0,0));
 //	delete fimg;
 
-	deep::DeepImage * img = new deep::DeepImage(x, y, c);
+//	deep::DeepImage * img = new deep::DeepImage(x, y, c);
+//
+////	drawDeepCircle(5.0f, 400*scale, 300*scale, 100*scale, {1.f, 0.f, 0.f, 0.6f}, img);
+//	drawDeepCircle(1.0f, 300*scale, 200*scale, 100*scale, {0.f, 1.f, 0.f, 0.6f}, img);
+////	drawDeepCircle(3.0f, 275*scale, 300*scale, 100*scale, {0.f, 0.f, 1.f, 0.6f}, img);
+//	drawDeepRect(4.0f, 100*scale, 200*scale, 250*scale, 350*scale, {1.f, 1.f, 1.f, 0.6f}, img);
+////	drawDeepRect(1.0f, 50*scale, 250*scale, 150*scale, 400*scale, {1.f, 0.f, 1.f, 1.0f}, img);
+//
+////	deep::Image * flatImg = deep::renderDeepImage(*img);
+////	writeImageFile("deep2flat2.png", x, y, 4, flatImg->data(0,0,0));
+////
+////	printDeepImageStats(*img);
+//
+//	deep::DeepImageWriter writer("deep2.sdf", *img);
+//	writer.open();
+//	writer.write();
+//	writer.close();
+//	delete img;
+////	delete flatImg;
 
-	drawDeepCircle(5.0f, 400*scale, 300*scale, 100*scale, {1.f, 0.f, 0.f, -0.6f}, img);
-	drawDeepCircle(1.0f, 300*scale, 200*scale, 100*scale, {0.f, 1.f, 0.f, 0.6f}, img);
-	drawDeepCircle(3.0f, 275*scale, 300*scale, 100*scale, {0.f, 0.f, 1.f, -0.6f}, img);
-	drawDeepRect(4.0f, 100*scale, 200*scale, 250*scale, 350*scale, {1.f, 1.f, 1.f, -0.6f}, img);
-	drawDeepRect(1.0f, 50*scale, 250*scale, 150*scale, 400*scale, {1.f, 0.f, 1.f, 1.0f}, img);
+	deep::DeepImageReader reader("deep1.sdf");
+	deep::DeepImage * d1 = reader.read();
+//	printDeepImageStats(*d1);
 
-	deep::Image * flatImg = deep::renderDeepImage(*img);
-	writeImageFile("deep2flat.png", x, y, 4, flatImg->data(0,0,0));
+	deep::DeepImageReader reader2("deep2.sdf");
+	deep::DeepImage * d2 = reader2.read();
+//	printDeepImageStats(*d2);
 
-	printDeepImageStats(*img);
+	d1->addDeepImage(*d2);
+	printDeepImageStats(*d1);
 
-	deep::DeepImageWriter writer("deep.sdf", *img);
-	writer.open();
-	writer.write();
-	writer.close();
-	delete img;
-	delete flatImg;
 
-	deep::DeepImageReader reader("deep.sdf");
-	deep::DeepImage * np = reader.read();
-
-	printDeepImageStats(*np);
-
-	flatImg = deep::renderDeepImage(*np);
-	writeImageFile("deep_read2flat.png", x, y, 4, flatImg->data(0,0,0));
-
-	delete np;
+	deep::Image * flatImg = deep::renderDeepImage(*d1);
+	writeImageFile("deep12comb.png", x, y, 4, flatImg->data(0,0,0));
+	delete d1;
+	delete d2;
+//	delete np;
 	delete flatImg;
 }

@@ -19,6 +19,10 @@ class DeepImage {
 public:
 	DeepImage(int inWidth, int inHeight, std::vector<std::string> channelNames, std::string pixelFilter = "Nearest");
 	~DeepImage();
+
+	// Add another deep image, will require that all channels in this
+	// deep image exists in the other image. Extra channels will be discarded.
+	void addDeepImage(const DeepImage & other);
 	void addSample(float z, float y, float x, std::initializer_list<DeepDataType> list);
 	void addSample(float z, float y, float x, std::vector<DeepDataType> list);
 	// void addSampleWithZ(float y, float x, std::vector<DeepDataType> list);
