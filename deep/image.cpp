@@ -14,7 +14,7 @@ namespace deep {
 
 Image::Image(int inWidth, int inHeight, std::vector<std::string> inChannelNames, std::string pixelFilter) :
 		mWidth(inWidth), mHeight(inHeight), mChannelNames(inChannelNames), mFilter(nullptr) {
-	std::cout << "Ctr Image" << std::endl;
+//	std::cout << "Ctr Image" << std::endl;
 	for (auto cn : mChannelNames) {
 		std::cout << cn << " ";
 	}
@@ -26,15 +26,15 @@ Image::Image(int inWidth, int inHeight, std::vector<std::string> inChannelNames,
 	iss >> type;
 	if (type.compare("Nearest") == 0) {
 		mFilter = new NNFilter();
-		std::cout << "Using Nearest" << std::endl;
+//		std::cout << "Using Nearest" << std::endl;
 	} else if (type.compare("Linear") == 0) {
 		mFilter = new LinearFilter();
-		std::cout << "Using Linear" << std::endl;
+//		std::cout << "Using Linear" << std::endl;
 	} else { // type == "Gaussian"
 		int width = 2;
 		iss >> width;
 		mFilter = new GaussianFilter(width);
-		std::cout << "Using Gaussian" << std::endl;
+//		std::cout << "Using Gaussian" << std::endl;
 	}
 }
 
@@ -50,6 +50,14 @@ ImageDataType * Image::data(int y, int x, int c) {
 		return &mData[(y*width() + x)*channels() + c];
 	} else {
 		return nullptr;
+	}
+}
+
+ImageDataType Image::data(int y, int x, int c) const {
+	if (0 < x < width() && 0 < y < height()) {
+		return mData[(y*width() + x)*channels() + c];
+	} else {
+		return 0.0;
 	}
 }
 

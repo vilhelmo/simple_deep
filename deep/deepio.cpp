@@ -46,6 +46,8 @@ DeepImage * DeepImageReader::read() {
 		return nullptr;
 	}
 
+//	std::cout << "Reading deep file: " << mFilename << std::endl;
+
 //	// Check file type
 //	std::string deepDataType;
 //	mFileHandle->read(reinterpret_cast<char *>(&deepDataType), strlen(typeid(DeepDataType).name()));
@@ -57,7 +59,7 @@ DeepImage * DeepImageReader::read() {
 	int numElems;
 	mFileHandle.read(reinterpret_cast<char *>(&numElems), sizeof(int));
 
-	std::cout << "Width: " << width << " height " << height << " num elems: " << numElems << std::endl;
+//	std::cout << "\tWidth: " << width << " height " << height << " num elems: " << numElems << std::endl;
 
 	// Read channel info
 	std::vector<std::string> channelNames;
@@ -82,15 +84,16 @@ DeepImage * DeepImageReader::read() {
 		}
 	}
 
-	std::cout << "Channel names are:" << std::endl;
-	for (auto & str : channelNames) {
-		std::cout << str << " ";
-	}
-
-	std::cout << "Channel names in order are:" << std::endl;
-	for (auto & str : channelNamesInOrder) {
-		std::cout << str << " ";
-	}
+//	std::cout << "\tChannel names are: ";
+//	for (auto & str : channelNames) {
+//		std::cout << str << " ";
+//	}
+//
+//	std::cout << std::endl << "\tChannel names in order are: ";
+//	for (auto & str : channelNamesInOrder) {
+//		std::cout << str << " ";
+//	}
+//	std::cout << std::endl;
 
 	DeepImage * image = new DeepImage(width, height, channelNamesInOrder);
 

@@ -20,8 +20,10 @@ public:
 	Image(int inWidth, int inHeight, std::vector<std::string> channelNames, std::string pixelFilter = "Nearest");
 	~Image();
 	ImageDataType * data(int y, int x, int c);
+	ImageDataType data(int y, int x, int c) const;
 	void addSample(float y, float x, std::initializer_list<ImageDataType> list);
 	void addSample(float y, float x, std::vector<ImageDataType> list);
+	inline const std::vector<std::string> & channelNames() const { return mChannelNames; }
 	inline int channels() const { return mChannelNames.size(); }
 	inline int width() const { return mWidth; }
 	inline int height() const { return mHeight; }

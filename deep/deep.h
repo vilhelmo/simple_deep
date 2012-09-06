@@ -31,6 +31,9 @@ static const int DEEP_VERSION = 1;
 
 static const std::string ALPHA = "A";
 static const std::string DEPTH = "Z";
+static const std::string DEPTH_BACK = "ZBack";
+
+static const DeepDataType EPSILON = 0.0000001;
 
 // Forward declares.
 class Image;
@@ -38,6 +41,7 @@ class DeepImage;
 
 // Helper functions:
 void printDeepImageStats(const DeepImage & image);
+void printFlatImageStats(const Image & image);
 Image * renderDeepImage(const DeepImage & deepImage);
 
 } // End namespace
