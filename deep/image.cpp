@@ -15,10 +15,10 @@ namespace deep {
 Image::Image(int inWidth, int inHeight, std::vector<std::string> inChannelNames, std::string pixelFilter) :
 		mWidth(inWidth), mHeight(inHeight), mChannelNames(inChannelNames), mFilter(nullptr) {
 //	std::cout << "Ctr Image" << std::endl;
-	for (auto cn : mChannelNames) {
-		std::cout << cn << " ";
-	}
-	std::cout << std::endl;
+//	for (auto cn : mChannelNames) {
+//		std::cout << cn << " ";
+//	}
+//	std::cout << std::endl;
 
 	mData = new ImageDataType[width()*height()*channels()];
 	std::istringstream iss(pixelFilter);

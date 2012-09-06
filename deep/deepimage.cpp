@@ -240,7 +240,6 @@ std::vector<DeepDataType> DeepImage::renderPixelLinear(int y, int x) const {
 //				" lo:" << trans.second[1] << " num:" << trans.second[2] << std::endl;
 //	}
 
-//	bool hasSample = false;
 	DeepDataType minTrans = 1.0;
 	// Do the final compositing using the transmittance function.
 	// TODO: Comment this part.
@@ -249,18 +248,17 @@ std::vector<DeepDataType> DeepImage::renderPixelLinear(int y, int x) const {
 		DeepDataType zBack = mChannelData.at(DEPTH_BACK)[index];
 		DeepDataType alpha = mChannelData.at(ALPHA)[index];
 		if (alpha >= 0.0) {
-//			hasSample = true;
 			auto transIter = transFunc.find(z);
 			if (zBack > z) {
-				DeepDataType lastTrans = transIter->second[1]; //limitValue(transIter->second[1]);
+				DeepDataType lastTrans = transIter->second[1];
 				DeepDataType transparency = 0.0;
 				DeepDataType volumeCounter = transIter->second[2];
 				auto transBackIter = transFunc.find(zBack);
 				do {
 					transIter++;
-					transparency += (lastTrans - transIter->second[0])/volumeCounter; //(lastTrans - limitValue(transIter->second[0]))/volumeCounter;
+					transparency += (lastTrans - transIter->second[0])/volumeCounter;
 					volumeCounter = transIter->second[2];
-					lastTrans = transIter->second[1]; //limitValue(transIter->second[1]);
+					lastTrans = transIter->second[1];
 				} while (transIter != transBackIter);
 				minTrans = std::min(minTrans, transparency);
 				int c = 0;
@@ -273,7 +271,7 @@ std::vector<DeepDataType> DeepImage::renderPixelLinear(int y, int x) const {
 					c++;
 				}
 			} else {
-				DeepDataType transDiff = transIter->second[0] - transIter->second[1]; //limitValue(transIter->second[0]) - limitValue(transIter->second[1]);
+				DeepDataType transDiff = transIter->second[0] - transIter->second[1];
 				minTrans = std::min(minTrans, transIter->second[1]);
 				int c = 0;
 				for (auto & channelName : mChannelNamesNoZs) {
@@ -289,24 +287,8 @@ std::vector<DeepDataType> DeepImage::renderPixelLinear(int y, int x) const {
 	}
 
 	// Unpremult
-//	auto transIterReverse = transFunc.rbegin();
-//	DeepDataType lastTrans = 1.0;
-//	while (transIterReverse != transFunc.rend()) {
-////		std::cout << "lastTrans: " << lastTrans << std::endl;
-//		if (transIterReverse->second[0] > transIterReverse->second[1] ||
-//				transIterReverse->second[1] <= lastTrans) {
-//			lastTrans = transIterReverse->second[1];
-//			break;
-//		}
-//		lastTrans = transIterReverse->second[1];
-//		transIterReverse++;
-//	}
-//	DeepDataType lastTrans = 1.0; //transIterReverse->second[1];
-//	if (hasSample) {
-//		lastTrans = transIterReverse->second[1];
-//	}
-
-	DeepDataType lastAlpha = finalColorValues[3]; //1.0 - limitValue(minTrans); //lastTrans);
+	auto alphaIter = std::find(mChannelNamesNoZs.begin(), mChannelNamesNoZs.end(), ALPHA);
+	DeepDataType lastAlpha = finalColorValues[std::distance(mChannelNamesNoZs.begin(), alphaIter)];
 	int c = 0;
 	for (auto & channelName : mChannelNamesNoZs) {
 		if (channelName.compare(ALPHA) != 0) {
@@ -315,8 +297,6 @@ std::vector<DeepDataType> DeepImage::renderPixelLinear(int y, int x) const {
 			} else {
 				finalColorValues[c] = 0.0;
 			}
-		} else {
-			finalColorValues[c] = lastAlpha;
 		}
 		c++;
 	}

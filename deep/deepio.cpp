@@ -169,7 +169,7 @@ bool DeepImageWriter::write() {
 
 	for (auto & channelData : mDeepImage.mChannelData) {
 		int channelSize = channelData.second.size();
-		std::cout << "Writing channel " << channelData.first << " data size: " << channelSize << std::endl;
+//		std::cout << "Writing channel " << channelData.first << " data size: " << channelSize << std::endl;
 		mFileHandle->write(reinterpret_cast<char *>(&channelSize), sizeof(int));
 		for (auto & value : channelData.second) {
 			mFileHandle->write(reinterpret_cast<const char *>(&value), sizeof(DeepDataType));
