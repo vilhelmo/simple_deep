@@ -58,17 +58,17 @@ DeepImage::~DeepImage() {
 	mIndexData = nullptr;
 }
 
-void DeepImage::addSample(float z, float y, float x, std::initializer_list<DeepDataType> list) {
+void DeepImage::addSampleNormalized(float z, float y, float x, std::initializer_list<DeepDataType> list) {
 	std::vector<DeepDataType> c(list.size());
 	int i = 0;
 	for (auto iter = list.begin(); iter != list.end(); ++iter) {
 		c[i] = (*iter);
 		++i;
 	}
-	addSample(z, y, x, c);
+	addSampleNormalized(z, y, x, c);
 }
 
-void DeepImage::addSample(float z, float y, float x, std::vector<DeepDataType> list) {
+void DeepImage::addSampleNormalized(float z, float y, float x, std::vector<DeepDataType> list) {
 	int iy = std::max(std::min(int(y * height()), height() - 1), 0);
 	int ix = std::max(std::min(int(x * width()), width() - 1), 0);
 
@@ -82,18 +82,21 @@ void DeepImage::addSample(float z, float y, float x, std::vector<DeepDataType> l
 	indexVector(iy, ix)->push_back(index);
 }
 
-void DeepImage::addSample(float y, float x, std::vector<DeepDataType> list) {
+void DeepImage::addSampleNormalized(float y, float x, std::vector<DeepDataType> list) {
 	if (list.size() != mChannelData.size()) { return; }
 	int iy = std::max(std::min(int(y * height()), height() - 1), 0);
 	int ix = std::max(std::min(int(x * width()), width() - 1), 0);
+	addSample(iy, ix, list);
+}
 
+void DeepImage::addSample(int y, int x, std::vector<DeepDataType> list) {
 	auto channelNameIter = mChannelNamesInOrder.begin();
 	for (auto inputIter = list.begin(); inputIter != list.end(); ++inputIter) {
 		mChannelData[*channelNameIter].push_back(*inputIter);
 		channelNameIter++;
 	}
 	int index = mChannelData[DEPTH].size() - 1;
-	indexVector(iy, ix)->push_back(index);
+	indexVector(y, x)->push_back(index);
 }
 
 const std::vector<int> & DeepImage::deepDataIndex(int y, int x) const {

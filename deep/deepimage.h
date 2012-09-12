@@ -24,11 +24,12 @@ public:
 	// deep image exists in the other image. Extra channels will be discarded.
 	void addDeepImage(const DeepImage & other);
 	void subtractDeepImage(const DeepImage & other);
-	void addSample(float z, float y, float x, std::initializer_list<DeepDataType> list);
-	void addSample(float z, float y, float x, std::vector<DeepDataType> list);
+	void addSampleNormalized(float z, float y, float x, std::initializer_list<DeepDataType> list);
+	void addSampleNormalized(float z, float y, float x, std::vector<DeepDataType> list);
 
 	// When calling this function, the values in the list must include Z.
-	void addSample(float y, float x, std::vector<DeepDataType> list);
+	void addSampleNormalized(float y, float x, std::vector<DeepDataType> list);
+	void addSample(int y, int x, std::vector<DeepDataType> list);
 	// void addSampleWithZ(float y, float x, std::vector<DeepDataType> list);
 
 	const std::vector<int> & deepDataIndex(int y, int x) const;

@@ -41,7 +41,7 @@ void printFlatImageStats(const Image & image) {
 		DeepDataType max = -10000.0;
 		for (int y = 0; y < image.height(); ++y) {
 			for (int x = 0; x < image.width(); ++x) {
-				float d = image.data(y, x, c);
+				DeepDataType d = image.data(y, x, c);
 				min = std::min(min, d);
 				max = std::max(max, d);
 			}
@@ -53,7 +53,11 @@ void printFlatImageStats(const Image & image) {
 
 Image * renderDeepImage(const DeepImage & deepImage) {
 	Image * renderedImage = new Image(deepImage.width(), deepImage.height(), deepImage.channelNamesNoZ());
-
+	if (deepImage.hasZBack()) {
+		std::cout << "Rendering deep image with zback" << std::endl;
+	} else {
+		std::cout << "Rendering deep image without zback" << std::endl;
+	}
 	for (int y = 0; y < deepImage.height(); ++y) {
 		for (int x = 0; x < deepImage.width(); ++x) {
 			ImageDataType * dataPtr = renderedImage->data(y, x, 0);

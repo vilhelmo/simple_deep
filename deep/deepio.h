@@ -32,8 +32,8 @@ public:
 	DeepImageWriter(std::string filename, const DeepImage & image) : mFilename(filename), mDeepImage(image), mFileHandle(nullptr) { }
 	virtual ~DeepImageWriter() { }
 	bool open();
-	bool close();
-	bool write();
+	void close();
+	void write();
 private:
 	DeepImageWriter(const DeepImageWriter & src);
 	DeepImageWriter & operator=(const DeepImageWriter & rhs);

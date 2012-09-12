@@ -158,7 +158,7 @@ bool DeepImageWriter::open() {
 	mFileHandle->write(&newline, sizeof(char));
 }
 
-bool DeepImageWriter::write() {
+void DeepImageWriter::write() {
 	int breakInt = -1;
 	for (int i = 0; i < mDeepImage.width() * mDeepImage.height(); ++i) {
 		for (int index : mDeepImage.mIndexData[i]) {
@@ -177,13 +177,12 @@ bool DeepImageWriter::write() {
 	}
 }
 
-bool DeepImageWriter::close() {
+void DeepImageWriter::close() {
 	if (mFileHandle) {
 		mFileHandle->close();
 		delete mFileHandle;
 		mFileHandle = nullptr;
 	}
-	return true;
 }
 
 

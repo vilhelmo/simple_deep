@@ -31,25 +31,5 @@ SConscript(project + '/SConscript', exports=['project'])
 project = 'deep_test'
 SConscript(project + '/SConscript', exports=['project'])
 
-#
-#libEnv = Environment()  # Initialize the environment
-#
-#lib_target  = "deep"
-#lib_sources = ["deep.cpp"]
-#
-#libEnv['CXXFLAGS'] = ['-std=c++0x', '-g']
-#
-#lib = libEnv.SharedLibrary(target = lib_target, source = lib_sources)
-#libEnv.Alias("install", libEnv.Install("/usr/lib", lib))
-#
-#test_source = "deep_test/deep_test.cpp"
-#test_target = "deep_test/run_deep_test"
-#
-#env = Environment()
-#
-#env.Append(CPPPATH = ['./'])
-#env.Append(CXXFLAGS = ['-std=c++0x', '-g'])
-#env.Append(LIBPATH = ['./'])
-#env.Append(LIBS = ['OpenImageIO', 'deep'])
-#
-#env.Program(target = test_target, source = test_source)
+project = 'rat2sdf'
+SConscript(project + '/SConscript', exports=['project'])

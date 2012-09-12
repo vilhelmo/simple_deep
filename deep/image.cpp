@@ -62,7 +62,7 @@ ImageDataType Image::data(int y, int x, int c) const {
 }
 
 void Image::addSample(float y, float x, std::initializer_list<ImageDataType> list) {
-	std::vector<float> c(4);
+	std::vector<ImageDataType> c(4);
 	int i = 0;
 	for (auto iter = list.begin(); iter != list.end(); ++iter) {
 		c[i] = (*iter);
