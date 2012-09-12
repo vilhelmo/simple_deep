@@ -1,0 +1,50 @@
+import glob
+
+# Get all the build variables we need
+Import('env', 'project', 'mymode', 'debugcflags', 'releasecflags')
+localenv = env.Clone()
+
+# Holds the root of the build directory tree
+buildroot = '../' + mymode
+# Holds the build directory for this project
+builddir = buildroot + '/' + project
+# Holds the path to the executable in the build directory
+targetpath = builddir + '/' + project
+
+# Append the user's additional compile flags
+# assume debugcflags and releasecflags are defined
+if mymode == 'debug':
+	localenv.Append(CCFLAGS=debugcflags)
+else:
+	localenv.Append(CCFLAGS=releasecflags)
+
+# Specify the build directory
+localenv.VariantDir(builddir, ".", duplicate=0)
+
+cppFlags = ['-DUT_DSO_TAGINFO=\"3262197cbf0440182ba30185672c98f0234bd9fd8214d0b627e39c547545f9cc65c07beafc7d24640a0ae8ec67957f064bee8645a1c28a0103163de177fb97b64aa75fb3ec925b84b234a70847ba11fcab4ed5f08dfbc324b3a054141f0fad4191\"',
+'-DVERSION=\"12.1.33\"', '-D_GNU_SOURCE', '-DLINUX', '-DAMD64', '-DSIZEOF_VOID_P=8', '-DSESI_LITTLE_ENDIAN',
+'-DENABLE_THREADS', '-DUSE_PTHREADS', '-D_REENTRANT', '-D_FILE_OFFSET_BITS=64', '-DGCC4', '-DGCC3', '-O2', 
+'-Wno-deprecated', '-Wall', '-W', '-Wno-parentheses', '-Wno-sign-compare', '-Wno-reorder', '-Wno-uninitialized', 
+'-Wunused', '-Wno-unused-parameter', '-fPIC', '-fno-strict-aliasing', '-m64']
+
+cppPaths = ['../',
+			'/opt/hfs12.1.33/toolkit/include']
+
+libPaths = [buildroot + '/' + 'deep',
+			'/opt/hfs12.1.33/dsolib',
+			'/usr/X11R6/lib64',
+			'/usr/X11R6/lib']
+
+libs = ['deep', 'pthread', 'HoudiniUI', 'HoudiniOPZ', 'HoudiniOP3', 'HoudiniOP2', 'HoudiniOP1',
+		'HoudiniSIM', 'HoudiniGEO', 'HoudiniPRM', 'HoudiniUT', 'GLU', 'GL', 'X11', 'Xext', 'Xi', 'dl']
+
+linkFlags = ['-Wl,-rpath,/opt/hfs12.1.33/dsolib', '-m64']
+
+localenv.Append(CPPFLAGS=cppFlags)
+localenv.Append(CPPPATH = cppPaths)
+localenv.Append(LIBPATH = libPaths)
+localenv.Append(LIBS = libs)
+localenv.Append(LINKFLAGS=linkFlags)
+
+srclst = map(lambda x: builddir + '/' + x, glob.glob('*.cpp'))
+localenv.Program(targetpath, source=srclst)
